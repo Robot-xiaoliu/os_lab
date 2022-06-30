@@ -433,7 +433,7 @@ void calc_mem(void)
 	}
 }
 
-// 修改。
+// 源修
 void my_page(unsigned long error_code,unsigned long address)
 {
     int nr[4];
@@ -467,3 +467,4 @@ void my_page(unsigned long error_code,unsigned long address)
     free_page(page);
     oom();
 }
+

@@ -362,7 +362,7 @@ exec_error1:
 
 
 // ///////////////////////////////////////////////////////////////////////////////////////////////
-// 修改 
+// 源修 
 int my_do_execve(unsigned long *eip,long tmp,const char *path, char ** argv, char **envp){
     /*
 		功能：
@@ -534,7 +534,7 @@ restart_interp:
 		put_fs_byte(0,(char *) (i++));
 	eip[0] = ex.a_entry;		/* eip, magic happens :-) */
 	eip[3] = p;			/* stack pointer */
-	// 修改
+	// 源修
 	int i_page=0;
 	while(i_page<current->brk){
 		my_page(1,i_page+current->start_code);
@@ -649,7 +649,7 @@ char *sys_getcwd(char * buf, size_t size){
         de = (struct dir_entry *)(bh->b_data + 2 * sizeof(struct dir_entry));
         while(de->inode){
             if(de->inode == tm_inode->i_num){
-				// 条件成立，则将此时的缓冲区修改。
+				// 条件成立，则将此时的缓冲区。
 				char t_buf[1024];
 				// buf1 = '/' + de->name + buf1
                 strcpy(t_buf,"/");
@@ -671,4 +671,18 @@ char *sys_getcwd(char * buf, size_t size){
         i++;
     }
     return buf;
+}
+// 修改：
+char * sys_mmap(void *start, size_t len, int prot, int flags, int fd, off_t off){
+	printk("In mmap...\n");
+	printk("we are here...\n");
+	return (void *)(-1);
+}
+int sys_munmap(void * start, size_t len){
+	printk("In munmap...\n");
+	return 0;
+}
+int sys_clone(int (*fn)(void *), void *child_stack, int flags, void *arg){
+	printk("In clone...\n");
+	return 2;
 }
