@@ -334,7 +334,7 @@ void do_timer(long cpl)
 	if (!cpl) return;
 	schedule();
 }
-
+ 
 int sys_alarm(long seconds)
 {
 	int old = current->alarm;

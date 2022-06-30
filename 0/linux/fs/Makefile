@@ -52,7 +52,7 @@ exec.o : exec.c ../include/errno.h ../include/string.h \
   ../include/sys/stat.h ../include/sys/types.h ../include/a.out.h \
   ../include/linux/fs.h ../include/linux/sched.h ../include/linux/head.h \
   ../include/linux/mm.h ../include/signal.h ../include/linux/kernel.h \
-  ../include/asm/segment.h 
+  ../include/asm/segment.h  ../include/unistd.h
 fcntl.o : fcntl.c ../include/string.h ../include/errno.h \
   ../include/linux/sched.h ../include/linux/head.h ../include/linux/fs.h \
   ../include/sys/types.h ../include/linux/mm.h ../include/signal.h \

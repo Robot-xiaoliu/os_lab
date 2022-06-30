@@ -57,14 +57,14 @@ sa_handler = 0
 sa_mask = 4
 sa_flags = 8
 sa_restorer = 12
-
-nr_system_calls = 86  /* 72 */
+# 修改  数值 86 -> 92
+nr_system_calls = 92 # 必须为92，否则sys_getcwd会因不明原因无法运行。
 
 /*
  * Ok, I get parallel printer interrupts while using the floppy for some
  * strange reason. Urgel. Now I just ignore them.
  */
-.globl system_call,sys_fork,timer_interrupt,sys_execve
+.globl system_call,sys_fork,timer_interrupt,sys_execve,sys_execve2
 .globl hd_interrupt,floppy_interrupt,parallel_interrupt
 .globl device_not_available, coprocessor_error
 
@@ -91,6 +91,11 @@ system_call:
 	mov %dx,%es
 	movl $0x17,%edx		# fs points to local data space
 	mov %dx,%fs
+
+	pushl %eax   #by wyj
+	call print_nr
+	popl %eax
+
 	call sys_call_table(,%eax,4)
 	pushl %eax
 	movl current,%eax
@@ -201,6 +206,14 @@ sys_execve:
 	lea EIP(%esp),%eax
 	pushl %eax
 	call do_execve
+	addl $4,%esp
+	ret
+
+.align 4
+sys_execve2:		# 修改
+ 	lea EIP(%esp),%eax
+	pushl %eax
+	call my_do_execve
 	addl $4,%esp
 	ret
 

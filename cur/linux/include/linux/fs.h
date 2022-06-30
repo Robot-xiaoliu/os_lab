@@ -93,18 +93,18 @@ struct d_inode {
 struct m_inode {
 	unsigned short i_mode;
 	unsigned short i_uid;
-	unsigned long i_size;
+	unsigned long i_size;// 文件大小
 	unsigned long i_mtime;
 	unsigned char i_gid;
 	unsigned char i_nlinks;
-	unsigned short i_zone[9];
+	unsigned short i_zone[9];// 数据存储的磁盘块序号，block
 /* these are in memory also */
 	struct task_struct * i_wait;
 	unsigned long i_atime;
 	unsigned long i_ctime;
 	unsigned short i_dev;
 	unsigned short i_num;
-	unsigned short i_count;
+	unsigned short i_count;// inode 引用计数
 	unsigned char i_lock;
 	unsigned char i_dirt;
 	unsigned char i_pipe;
@@ -114,9 +114,9 @@ struct m_inode {
 };
 
 struct file {
-	unsigned short f_mode;
-	unsigned short f_flags;
-	unsigned short f_count;
+	unsigned short f_mode;// 文件模式
+	unsigned short f_flags;// 文件标志
+	unsigned short f_count;// f_inode的个数
 	struct m_inode * f_inode;
 	off_t f_pos;
 };
