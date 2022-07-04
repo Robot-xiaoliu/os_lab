@@ -194,4 +194,18 @@ repeat:
 	return -ECHILD;
 }
 
+// 修改
+/*int pthread_join(pthread_t thread, void **value_ptr)的系统调用，主要参考了sys_waitpid的实现*/
+int sys_syspthread_join(int thread,long *value_ptr){
+	printk("you have been in sys_syspthread_join...\n");
+	return -ECHILD;
+}
 
+
+/*pthread_exit(0)的系统调用，用来把调用它的线程终止掉，主要参考了do_exit的实现
+ *当他被一个进程调用的时候需要传递进来要终止的线程号；
+ */
+int sys_endthread(long code){
+    printk("you have been in sys_endthread...\n");
+	return (-1);	/* just to suppress warnings */
+}

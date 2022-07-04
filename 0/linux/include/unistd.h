@@ -150,9 +150,10 @@
 #define __NR_sleep 90
 #define __NR_getcwd 91
 // 修改
-#define __NR_mmap 92
-#define __NR_munmap 93
-#define __NR_clone 94
+#define __NR_create_thread 92
+#define __NR_endthread 93
+#define __NR_syspthread_join 94
+
 #define _syscall0(type,name) \
 type name(void) \
 { \

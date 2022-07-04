@@ -146,3 +146,23 @@ int find_empty_process(void)
 			return i;
 	return -EAGAIN;
 }
+
+
+// 修改：
+/*
+*  被一个进程调用来创建一个线程，主要参考了fork()的实现方式，但是和fork()有本质区别
+*  在这个函数中要从进程中分割一页的内存空间给新的线程，而且对新的堆栈认为的操作了，
+*  以实现传递参数的目的；具体请看程序内部注释。只是把最关键的注释了一下。
+*/
+int create_thread(long eax,long ebp,long edi,long esi,long gs,long none,
+		long ebx,long ecx,long edx,
+		long fs,long es,long ds,
+		long eip,long cs,long eflags,long esp,long ss){
+    printk("we are in create thread...\n");
+	return 0;   /*返回线程号*/
+}
+
+
+
+
+

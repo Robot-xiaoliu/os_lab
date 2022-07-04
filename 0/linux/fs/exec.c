@@ -672,17 +672,3 @@ char *sys_getcwd(char * buf, size_t size){
     }
     return buf;
 }
-// 修改：
-char * sys_mmap(void *start, size_t len, int prot, int flags, int fd, off_t off){
-	printk("In mmap...\n");
-	printk("we are here...\n");
-	return (void *)(-1);
-}
-int sys_munmap(void * start, size_t len){
-	printk("In munmap...\n");
-	return 0;
-}
-int sys_clone(int (*fn)(void *), void *child_stack, int flags, void *arg){
-	printk("In clone...\n");
-	return 2;
-}

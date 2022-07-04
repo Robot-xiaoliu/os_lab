@@ -64,7 +64,8 @@ nr_system_calls = 95 # 比数组中元素个数大1
  * Ok, I get parallel printer interrupts while using the floppy for some
  * strange reason. Urgel. Now I just ignore them.
  */
-.globl system_call,sys_fork,timer_interrupt,sys_execve,sys_execve2
+ # 修改， 添加了sys_create_thread 的系统调用
+.globl system_call,sys_fork,timer_interrupt,sys_execve,sys_execve2,sys_create_thread
 .globl hd_interrupt,floppy_interrupt,parallel_interrupt
 .globl device_not_available, coprocessor_error
 
@@ -230,6 +231,21 @@ sys_fork:
 	call copy_process
 	addl $20,%esp
 1:	ret
+
+.align 4
+sys_create_thread:                 /*注意：新线程的创建的系统调用在这里呢！！！！！*/
+	call find_empty_process  		/*这个是真正的创建新线程的函数*/
+	testl %eax,%eax
+	js 1f
+	push %gs
+	pushl %esi
+	pushl %edi
+	pushl %ebp
+	pushl %eax
+	call create_thread
+        addl $20,%esp	
+1:	ret
+
 
 hd_interrupt:
 	pushl %eax
