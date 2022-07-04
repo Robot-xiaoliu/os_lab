@@ -206,6 +206,34 @@ int sys_syspthread_join(int thread,long *value_ptr){
  *当他被一个进程调用的时候需要传递进来要终止的线程号；
  */
 int sys_endthread(long code){
-    printk("you have been in sys_endthread...\n");
+    int i;
+	free_page_tables(get_base(current->ldt[1]),get_limit(0x0f));
+	free_page_tables(get_base(current->ldt[2]),get_limit(0x17));
+	for (i=0 ; i<NR_TASKS ; i++)
+		if (task[i] && task[i]->father == current->pid) {
+			task[i]->father = 1;
+			if (task[i]->state == TASK_ZOMBIE)
+				/* assumption task[1] is always init */
+				(void) send_sig(SIGCHLD, task[1], 1);
+		}
+	for (i=0 ; i<NR_OPEN ; i++)
+		if (current->filp[i])
+			sys_close(i);
+	iput(current->pwd);
+	current->pwd=NULL;
+	iput(current->root);
+	current->root=NULL;
+	iput(current->executable);
+	current->executable=NULL;
+	if (current->leader && current->tty >= 0)
+		tty_table[current->tty].pgrp = 0;
+	if (last_task_used_math == current)
+		last_task_used_math = NULL;
+	if (current->leader)
+		kill_session();
+	current->state = TASK_ZOMBIE;
+	current->exit_code = code;
+	tell_father(current->father);
+	release(current);
 	return (-1);	/* just to suppress warnings */
 }
