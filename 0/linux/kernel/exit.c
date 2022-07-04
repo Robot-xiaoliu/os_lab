@@ -196,8 +196,56 @@ repeat:
 
 // 修改
 /*int pthread_join(pthread_t thread, void **value_ptr)的系统调用，主要参考了sys_waitpid的实现*/
-int sys_syspthread_join(int thread,long *value_ptr){
-	printk("you have been in sys_syspthread_join...\n");
+int sys_syspthread_join(int thread,long *value_ptr)  
+{
+	int flag, code;
+	struct task_struct ** p;
+
+	verify_area(value_ptr,4);
+repeat:
+	flag=0;
+	for(p = &LAST_TASK ; p > &FIRST_TASK ; --p) {
+		if (!*p || *p == current)
+			continue;
+		if ((*p)->father != current->pid)
+			continue;
+		if (thread>0) {
+			if ((*p)->pid != thread)
+				continue;
+		} else if (!thread) {
+			if ((*p)->pgrp != current->pgrp)
+				continue;
+		} else if (thread != -1) {
+			if ((*p)->pgrp != -thread)
+				continue;
+		}
+		switch ((*p)->state) {
+			case TASK_STOPPED:
+				if (!WUNTRACED)
+					continue;
+				put_fs_long(0x7f,value_ptr);
+				return (*p)->pid;
+			case TASK_ZOMBIE:
+				current->cutime += (*p)->utime;
+				current->cstime += (*p)->stime;
+				flag = (*p)->pid;
+				code = (*p)->exit_code;
+				release(*p);
+				put_fs_long(code,value_ptr);
+				return flag;
+			default:
+				flag=1;
+				continue;
+		}
+	}
+	if (flag) {
+		current->state=TASK_INTERRUPTIBLE;
+		schedule();
+		if (!(current->signal &= ~(1<<(SIGCHLD-1))))
+			goto repeat;
+		else
+			return -EINTR;
+	}
 	return -ECHILD;
 }
 
