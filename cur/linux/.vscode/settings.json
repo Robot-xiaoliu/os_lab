@@ -3,6 +3,10 @@
         "sys.h": "c",
         "sched.h": "c",
         "types.h": "c",
-        "stat.h": "c"
+        "stat.h": "c",
+        "unistd.h": "c",
+        "string.h": "c",
+        "errno.h": "c",
+        "pthread.h": "c"
     }
 }

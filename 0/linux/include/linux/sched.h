@@ -104,6 +104,11 @@ struct task_struct {
 	struct desc_struct ldt[3];
 /* tss for this task */
 	struct tss_struct tss;
+	// 修改
+	/*实际上这些新添加的元素对于本实验根本没有用到，不需要用到，但是可以用来扩展更加复杂的内核级线程*/
+	struct task_struct *threads[NR_TASKS];  /*存粗着挂在此进程下的所有的线程的PCB指针，只有线程才用到*/
+	short int index;   /*上面这个数组的可用下标*/
+	short int process_or_thread; /*可用来鉴别是进程还是线程*/
 };
 
 /*

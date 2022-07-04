@@ -151,8 +151,8 @@
 #define __NR_getcwd 91
 // 修改
 #define __NR_create_thread 92
-#define __NR_endthread 93
-#define __NR_syspthread_join 94
+#define __NR_end_thread 93
+#define __NR_join_pthread 94
 
 #define _syscall0(type,name) \
 type name(void) \

@@ -196,7 +196,7 @@ repeat:
 
 // 修改
 /*int pthread_join(pthread_t thread, void **value_ptr)的系统调用，主要参考了sys_waitpid的实现*/
-int sys_syspthread_join(int thread,long *value_ptr)  
+int sys_join_pthread(int thread,long *value_ptr)  
 {
 	int flag, code;
 	struct task_struct ** p;
@@ -253,7 +253,7 @@ repeat:
 /*pthread_exit(0)的系统调用，用来把调用它的线程终止掉，主要参考了do_exit的实现
  *当他被一个进程调用的时候需要传递进来要终止的线程号；
  */
-int sys_endthread(long code){
+int sys_end_thread(long code){
     int i;
 	free_page_tables(get_base(current->ldt[1]),get_limit(0x0f));
 	free_page_tables(get_base(current->ldt[2]),get_limit(0x17));

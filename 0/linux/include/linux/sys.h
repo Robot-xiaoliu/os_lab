@@ -97,8 +97,8 @@ extern char * sys_getcwd();
 
 // 修改：
 extern int sys_create_thread();
-extern int sys_endthread();
-extern int sys_syspthread_join();
+extern int sys_end_thread();
+extern int sys_join_pthread();
 fn_ptr sys_call_table[] = { sys_setup, sys_exit, sys_fork, sys_read,
 sys_write, sys_open, sys_close, sys_waitpid, sys_creat, sys_link,
 sys_unlink, sys_execve, sys_chdir, sys_time, sys_mknod, sys_chmod,
@@ -115,7 +115,7 @@ sys_setreuid,sys_setregid, sys_sigsuspend, sys_sigpending, sys_sethostname,
 sys_setrlimit, sys_getrlimit, sys_getrusage, sys_gettimeofday, 
 sys_settimeofday, sys_getgroups, sys_setgroups, sys_select, sys_symlink,
 sys_lstat, sys_readlink, sys_uselib,sys_execve2, sys_getdents,NULL, sys_sleep,sys_getcwd,
-sys_create_thread,sys_endthread,sys_syspthread_join};
+sys_create_thread,sys_end_thread,sys_join_pthread};
 
 /* So we don't have to do any more manual updating.... */
 int NR_syscalls = sizeof(sys_call_table)/sizeof(fn_ptr);

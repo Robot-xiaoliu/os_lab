@@ -1,16 +1,40 @@
-﻿#include <stdio.h>
+﻿#define __LIBRARY__
+#include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <string.h>
-#define __LIBRARY__
+#include <errno.h>
 #include <unistd.h>
 
 /*
- *  memtest.c
- *  simple memory test
- *  Copyright (C) 2008  All rights reserved.
- *  
- */
+_syscall2( int, create_thread, unsigned long, start, void *, arg );
+_syscall2( int, join_pthread, int, thread, void *, value_ptr );
+_syscall1( int, end_thread, int, value );*/
+
+int pthread_attr_init(void){ /*这个实验没有必要用到这个初始化函数*/
+    return 0;
+}
+int pthread_create(int *thread, void *(*start)(void *), void *arg)
+{
+    int id = 0;
+    if (!thread) 
+        return EINVAL;
+
+    id = create_thread((unsigned long)start,(int *)arg);
+
+    if ( id < 0 ) 
+        return errno;
+    *thread = id;
+    return id;
+}
+void pthread_exit(void *value_ptr)
+{
+    end_thread((int) value_ptr);
+}
+int pthread_join(int thread, void **value_ptr)    
+{
+    join_pthread( thread, value_ptr );
+    return 0;
+}
 
 void memoryTest(void * arg)
 {
@@ -60,12 +84,13 @@ void memoryTest(void * arg)
 
 }
 
-int main(){
+int main()
+{
     char *command[6] = {"thread", "times", "go", "status", "abort", "exit"};/*所有的命令*/
     char *tmpCommand;
     int numOfThreads = 0;   /*线程总数*/
     int times = 0;           /*测试的次数*/
-    pthread_t threads[64] = {0};  /*设置最大64个线程足够使用*/
+    int threads[64] = {0};  /*设置最大64个线程足够使用*/
     int addrSize = 0;
 
     /*每个线程有五个参数需要知道，依次为开始测试地址，
@@ -116,7 +141,7 @@ int main(){
         if( strcmp(tmpCommand, command[2]) == 0 )  /* “go” */
         {
             for(i = 0; i < numOfThreads; i++) /*创建线程*/
-                pthread_create(&threads[i], NULL, (void *)memoryTest, (void *)args[i]);
+                pthread_create(&threads[i], (void *)memoryTest, (void *)args[i]);
             continue;
         }
         if( strcmp(tmpCommand, command[3]) == 0 )  /* “status” */
@@ -157,17 +182,3 @@ int main(){
     }
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
