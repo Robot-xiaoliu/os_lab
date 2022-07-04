@@ -243,7 +243,7 @@ sys_create_thread:                 /*注意：新线程的创建的系统调用�
 	pushl %ebp
 	pushl %eax
 	call create_thread
-        addl $20,%esp	
+        addl $20,%esp
 1:	ret
 
 
